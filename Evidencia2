@@ -1,0 +1,136 @@
+ --Evidencia 2: Diseño y descripción de un circuito que utilice memoria(s)
+ --Luis Alberto Carranza González 		A01657296
+ --Karen Kimberly Chavarría Rosario 	A01652446
+ --Diana Hayde Chávez García 				A01653000
+
+-- Librerías
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity Evidencia2 is
+	port ( Clk 		: in std_logic;   
+			 S1, S2, S3, S4: in std_logic;
+			 LCD_rw,LCD_rs,LCD_enable	: out std_logic;   				
+		    dato 	: out std_logic_vector(7 downto 0));  --linea de datos
+		
+end Evidencia2;
+
+architecture Behavioral of Evidencia2 is
+	type texto1 is array (1 to 22) of std_logic_vector(7 downto 0); 
+	type texto2 is array (1 to 22) of std_logic_vector(7 downto 0); 
+	type texto3 is array (1 to 22) of std_logic_vector(7 downto 0); 
+	type texto4 is array (1 to 22) of std_logic_vector(7 downto 0); 
+	
+	constant datos1 : texto1 := (X"38",X"0c",X"01",X"01",X"C0",X"45",x"51",x"55",x"49",x"50",x"4f",x"20",x"43",x"43",x"4D",x"21",x"21",x"21",x"20",x"20",x"20",X"20"); --Comando texto 1    
+	constant datos2 : texto2 := (X"38",X"0c",X"01",X"01",X"C0",X"4B",X"49",X"4D",X"2C",X"20",X"4C",x"55",x"49",x"53",x"2C",x"20",x"48",x"41",x"59",x"44",x"45",X"20"); --Comando texto 2
+	constant datos3 : texto3 := (X"38",X"0c",X"01",X"01",X"C0",X"4E",X"4F",X"20",X"4E",X"4F",X"53",X"20",X"52",X"45",X"50",X"52",X"55",X"45",X"42",X"45",x"20",X"20"); --Comando texto 3
+	constant datos4 : texto4 := (X"38",x"0C",X"01",X"01",X"C0",X"46",X"45",X"4C",X"49",X"5A",X"20",X"4E",X"41",X"56",X"49",X"44",X"41",X"44",x"20",x"20",x"20",X"20"); --Comando texto 4
+
+
+begin
+	LCD_rw <= '0';  --lcd write
+process(Clk)
+	variable counter1 : integer := 0;
+	variable counterT1 : integer := 1;
+	variable counterT2 : integer := 1;
+	variable counterT3 : integer := 1;
+	variable counterT4 : integer := 1;
+begin
+
+	if Clk'event and Clk = '1' then
+			if S1 ='1' then		--Switch1
+				counter1 := counter1 + 1;
+				if counter1 <= 1000000 then
+					LCD_enable <= '1';
+					dato <= datos1(counterT1)(7 downto 0);
+				elsif counter1 < 2000000 then
+					LCD_enable <= '0';
+				elsif counter1 = 2000000 then
+					counterT1 := counterT1 + 1;
+					counter1 := 0;
+				end if;
+				
+				if counterT1 <= 5  then
+					LCD_rs <= '0';    
+				elsif counterT1 > 5   then
+					LCD_rs <= '1'; 	
+				end if;
+		
+				if counterT1 = 22 then  --repeated display of dato
+					counterT1 := 5;
+				end if;
+				
+				
+			elsif S2 ='1' then	--Switch 2
+				counter1 := counter1 + 1;
+				if counter1 <= 1000000 then
+					LCD_enable <= '1';
+					dato <= datos2(counterT2)(7 downto 0);
+				elsif counter1 < 2000000 then
+					LCD_enable <= '0';
+				elsif counter1 = 2000000 then
+					counterT2 := counterT2 + 1;
+					counter1 := 0;
+				end if;
+				
+				if counterT2 <= 5  then
+					LCD_rs <= '0';    
+				elsif counterT2 > 5   then
+					LCD_rs <= '1'; 	
+				end if;
+		
+				if counterT2 = 22 then  --repeated display of dato
+					counterT2 := 5;
+				end if;
+				
+			elsif S3 ='1' then	--Switch 3
+				counter1 := counter1 + 1;
+				if counter1 <= 1000000 then
+					LCD_enable <= '1';
+					dato <= datos3(counterT3)(7 downto 0);
+				elsif counter1 < 2000000 then
+					LCD_enable <= '0';
+				elsif counter1 = 2000000 then
+					counterT3 := counterT3 + 1;
+					counter1 := 0;
+				end if;
+				
+				if counterT3 <= 5  then
+					LCD_rs <= '0';    
+				elsif counterT3 > 5   then
+					LCD_rs <= '1'; 	
+				end if;
+		
+				if counterT3 = 22 then  --repeated display of dato
+					counterT3 := 5;
+				end if;
+
+			elsif S4 ='1' then	--Switch 4
+				counter1 := counter1 + 1;
+				if counter1 <= 1000000 then
+					LCD_enable <= '1';
+					dato <= datos4(counterT4)(7 downto 0);
+				elsif counter1 < 2000000 then
+					LCD_enable <= '0';
+				elsif counter1 = 2000000 then
+					counterT4 := counterT4 + 1;
+					counter1 := 0;
+				end if;
+				
+				if counterT4 <= 5  then
+					LCD_rs <= '0';    
+				elsif counterT4 > 5   then
+					LCD_rs <= '1'; 	
+				end if;
+		
+				if counterT4 = 22 then  --repeated display of dato
+					counterT4 := 5;
+				end if;	
+			end if;
+
+		end if;
+
+end process;
+end Behavioral;
